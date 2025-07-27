@@ -785,6 +785,50 @@ body {
   font-weight: 700;
 }
 
+@media (max-width: 600px) {
+  #pdf-toolbar, 
+  #pdf-toolbar-bottom {
+    flex-wrap: wrap;
+    gap: 5px;
+    font-size: 14px;
+  }
+
+  .pdf-button {
+    padding: 6px;
+    font-size: 14px;
+  }
+
+  canvas#pdf-canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .comments-title,
+  .form-title {
+    font-size: 18px;
+  }
+
+  .comment-form input,
+  .comment-form textarea {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .comment {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .dropdown-menu {
+    position: relative;
+    width: 100%;
+    box-shadow: none;
+  }
+}
+
+
+
+
 @media screen and (max-width: 600px) {
   body {
     padding-top: 2.5rem;
@@ -851,10 +895,22 @@ body {
     align-items: center;
     gap: 1.5rem;
   }
-
+  
+  .recent__articlemag {
+    flex-direction: column; /* Keep horizontal layout on mobile */
+    align-items: center;
+    gap: 1.5rem;
+  }
   .recent__article-cover {
     width: 80px !important; /* Smaller fixed width */
     height: 100px !important; /* Square aspect ratio */
+    margin-bottom: 0;
+  }
+
+  .recent__article-covermag{
+    width: 300px !important; /* Smaller fixed width */
+    height: 400px !important; 
+    justify-content: center;/* Square aspect ratio */
     margin-bottom: 0;
   }
 
