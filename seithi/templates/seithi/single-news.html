@@ -1,0 +1,258 @@
+{%load static%}
+
+
+
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+   <script defer src="{% static 'js/app.js' %}"></script>
+  <script id='pixel-script-poptin' src='https://cdn.popt.in/pixel.js?id=6962185e8c1c0' async='true'></script>
+  <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Paraparapu Chethi</title>
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="header__inner">
+        <a href="{% url 'news'%}" class="header__logo" aria-label="home-link">
+          <img src="{%static 'images/logo.png'%}" alt="" />
+        </a>
+        <nav class="header__nav" role="main-navigation">
+          <ul class="header__list">
+            <li class="header__item">
+              <a href="{% url 'news'%}" class="header__link">Home</a>
+            </li>
+            <li class="header__item">
+              <a href="#" class="header__link">New</a>
+            </li>
+            
+            <li class="header__item">
+              <a href="{% url 'magazine_page'%}" class="header__link">Magazines</a>
+            </li>
+            <li class="header__item header__dropdown">
+              <a href="#" class="header__link">Categories</a>
+              <ul class="dropdown-menu">
+                {% for tag in tags %}
+                  <li><a class="dropdown-item" href="{% url 'news-by-tag' tag.name %}">{{ tag.name }}</a></li>
+                {% endfor %}
+              </ul>
+            </li>
+
+          </ul>
+        </nav>
+        <button id="menu-btn" class="hamburger">
+          <span class="hamburger-top"></span>
+          <span class="hamburger-middle"></span>
+          <span class="hamburger-bottom"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" id="mobile-nav">
+    <ul class="mobile-nav__list">
+      <li class="mobile-nav__item">
+        <a href="{% url 'news' %}" class="mobile-nav__link">Home</a>
+      </li>
+      <li class="mobile-nav__item">
+        <a href="{% url 'new-news' %}" class="mobile-nav__link">New</a>
+      </li>
+      <li class="mobile-nav__item">
+        <a href="{% url 'magazine_page' %}" class="mobile-nav__link">Magazines</a>
+      </li>
+      <li class="mobile-nav__item header__item header__dropdown mobile-nav__link">
+          <a href="#" class="header__link mobile-nav__link">Categories</a>
+            <ul class="dropdown-menu">
+              {% for tag in tags %}
+                <li><a class="dropdown-item" href="{% url 'news-by-tag' tag.name %}">{{ tag.name }}</a></li>
+              {% endfor %}
+            </ul>
+          
+      </li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- HTML Structure -->
+<section class="singlenews">
+  <div class="container">
+    <div class="singlenews__inner">
+      <article class="singlenews__main">
+        {% if new.thumbnail %}
+          <img src="{{ new.thumbnail.url }}" alt="{{ new.title }}" class="singlenews__main-cover singlenews__main-cover--desktop">
+        {% else %}
+          <div class="singlenews__no-image">No image uploaded</div>
+        {% endif %}
+        
+        <div class="singlenews__content">
+          <div class="singlenews__header">
+            <span class="singlenews__category">{{ new.category }}</span>
+            <h1 class="singlenews__title">{{ new.title }}</h1>
+            {% for tag in tags %}
+            <span class="singlenews__categorytag">{{ tag.name }}</span>
+            {% endfor %}
+            <div class="singlenews__meta">
+              <span class="singlenews__date">On {{ new.published_date|date:"F j, Y" }}</span>
+            </div>
+          </div>
+          
+          <div class="singlenews__body">
+            {{ new.description|linebreaks }}
+          </div>
+          <!-- Share Label -->
+          <div style="margin-top: 30px; margin-bottom: 10px; font-weight: 600; font-size: 18px;">
+            Share:
+          </div>
+
+          <!-- Share Icons -->
+          <div style="display: flex; gap: 16px; align-items: center;">
+
+            <!-- WhatsApp -->
+            <a href="https://wa.me/?text={{ request.build_absolute_uri }}" target="_blank" title="Share on WhatsApp"
+              style="color: #25D366; font-size: 24px;">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" title="Share on Facebook"
+              style="color: #4267B2; font-size: 24px;">
+              <i class="fab fa-facebook"></i>
+            </a>
+
+            <!-- Copy to Clipboard -->
+            <a href="javascript:void(0);" onclick="copyToClipboard()" title="Copy Link"
+              style="color: #333; font-size: 24px;">
+              <i class="fas fa-link"></i>
+            </a>
+
+          </div>
+
+          <!-- Copy to Clipboard Script -->
+          <script>
+            function copyToClipboard() {
+              const text = "{{ request.build_absolute_uri }}";
+              navigator.clipboard.writeText(text).then(function () {
+                alert("🔗 Link copied to clipboard!");
+              }, function (err) {
+                alert("❌ Failed to copy link.");
+              });
+            }
+          </script>
+
+
+        </div>
+      </article>
+        <aside class="singlenews__side">
+            <h2 class="singlenews__side-title">New</h2>
+            <ul class="singlenews__side-list">
+            {% for item in latest_news %}
+              <li class="singlenews__side-item">
+                <h3 class="singlenews__side-item-title">
+                  <a href="{% url 'single-news' item.id %}">
+                    {{ item.title|truncatewords:6 }}
+                  </a>
+                </h3>
+                <p class="singlenews__side-item-desc">
+                  {{ item.description|truncatewords:7 }}
+                </p>
+              </li>
+            {% endfor %}
+
+            </ul>
+          </aside>
+    </div>
+    
+    <div class="singlenews__rich-content">
+      {{ new.content|safe }}
+    </div>
+  </div>
+</section>
+
+    <h1 class="container" style="margin-top: 50px; margin-bottom: 20px; font-size: 40px; font-weight: bold; text-align: center; text-transform: uppercase; letter-spacing: 2px; font-family: Arial, sans-serif;">
+  Related News!!
+</h1><section class="recent">
+      <div class="container"> <!-- Add this heading -->
+        <div class="recent__inner">
+          <ul class="recent__list">
+            {% for item in matched_news %}
+            <li class="recent__item">
+              <article class="recent__article">
+                {% if item.thumbnail %}
+                  <img class="recent__article-cover" src="{{ item.thumbnail.url }}" alt="">
+                {% else %}
+                  <img class="recent__article-cover" src="{% static 'images/d.jpg' %}" alt="No Image">
+                {% endif %}
+                <div class="recent__article-info">
+                  <span class="recent__article-number">{{ forloop.counter }}</span>
+                  <h4 class="recent__article-title">
+                    <a href="{% url 'single-news' item.id %}">{{ item.title|truncatewords:6 }}</a>
+                  </h4>
+                  <a href="{% url 'single-news' item.id %}" class="read-more-link">Read more →</a>
+                </div>
+              </article>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </section>
+<!-- Comments Section -->
+<section class="comments-section">
+  <div class="container">
+    <h2 class="comments-title">Comments</h2>
+
+
+
+    <div class="comment-form">
+      <h3 class="form-title">Leave a Comment</h3>
+      <form method="POST" action="">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Your Name" required>
+        <textarea name="body" rows="4" placeholder="Your Comment" required></textarea>
+        <button type="submit">Post Comment</button>
+      </form>
+    </div>
+
+    <!-- Existing Comments -->
+    <!-- Display Comments -->
+    <div class="comments-list">
+      {% for review in comments %}
+        <div class="comment">
+          <div class="comment-header">
+            <span class="comment-name">{{ review.name }}</span>
+            <span class="comment-date">{{ review.created|date:"F j, Y" }}</span>
+          </div>
+          <p class="comment-body">{{ review.body }}</p>
+        </div>
+      {% empty %}
+        <p>No comments yet. Be the first to comment!</p>
+      {% endfor %}
+    </div>
+
+
+    <!-- Comment Form -->
+
+  </div>
+</section>
+
+
+
+
+
+
+  </main>
+</body>
+
+</html>
+
+
+           
