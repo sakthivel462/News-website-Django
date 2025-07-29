@@ -3,6 +3,9 @@
 This is a dynamic, SEO-optimized news and magazine platform developed using **Django**. The project is focused on delivering real-time content with high performance, modern UI, and powerful backend CMS tools — ideal for journalists, editors, and digital publishers.
 
 ---
+##Live Link
+https://www.paraparappucheithi.com/
+
 
 ## 🚀 Features
 
